@@ -29,7 +29,13 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type MyPick<T, K extends keyof T> = { [F in K]: T[F] }
+// type MyPick<T, K extends keyof T> = { [F in K]: T[F] }
+
+type MyPick<T, K extends keyof T> = {
+  [k in K as k extends K ? k : never]: T[k]
+}
+
+type A = Readonly<keyof ["a", "b"]>
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"

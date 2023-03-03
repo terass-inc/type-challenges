@@ -18,8 +18,27 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
+/* 
 // https://github.com/type-challenges/type-challenges/issues/1646
+In my understanding, extends in generic type will do some implicit iteration on each union type input. which means:
+
+'a' | 'b' | 'c' extends 'a' | 'b' will do
+-> 'a' extends 'a' | 'b' &&
+'b' extends 'a' | 'b' &&
+'c' extends 'a' | 'b' 
+*/
+
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types
+// Distributive conditional types
+
 type MyExclude<T, U> = T extends U ? never : T
+
+// https://github.com/type-challenges/type-challenges/issues/19573
+// type MyExclude<T, U> = {
+//   [K in T extends U ? never : T as string]: K extends U ? never : K
+// }[0]
+
+type a = MyExclude<"a" | "b" | "c", "b" | "c">
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"

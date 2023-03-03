@@ -20,7 +20,13 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type TupleToObject<T extends readonly any[]> = { [K in keyof T as Exclude<K, keyof any[]]>: T[K] }
+//type TupleToObject<T extends readonly any[]> = { [K in keyof T as Exclude<K, keyof []]>: T[K] }
+
+type A = Exclude<keyof ["a", "b", 3], keyof []>
+
+type TupleToObject<T extends readonly (string | number)[]> = {
+  [i in T[number]]: i
+}
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
