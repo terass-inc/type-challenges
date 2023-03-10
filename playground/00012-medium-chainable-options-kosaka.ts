@@ -39,38 +39,41 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Chainable = {
-  option(key: string, value: any): any
-  get(): any
+type Chainable<T = {}> = {
+  option<K extends string, V>(
+    key: K,
+    value: V
+  ): Chainable<{ [P in keyof T]: T[P] } & { K: V }>
+  get(): T
 }
 
 /* _____________ テストケース _____________ */
-import type { Alike, Expect } from '@type-challenges/utils'
+import type { Alike, Expect } from "@type-challenges/utils"
 
 declare const a: Chainable
 
 const result1 = a
-  .option('foo', 123)
-  .option('bar', { value: 'Hello World' })
-  .option('name', 'type-challenges')
+  .option("foo", 123)
+  .option("bar", { value: "Hello World" })
+  .option("name", "type-challenges")
   .get()
 
 const result2 = a
-  .option('name', 'another name')
+  .option("name", "another name")
   // @ts-expect-error
-  .option('name', 'last name')
+  .option("name", "last name")
   .get()
 
 const result3 = a
-  .option('name', 'another name')
+  .option("name", "another name")
   // @ts-expect-error
-  .option('name', 123)
+  .option("name", 123)
   .get()
 
 type cases = [
   Expect<Alike<typeof result1, Expected1>>,
   Expect<Alike<typeof result2, Expected2>>,
-  Expect<Alike<typeof result3, Expected3>>,
+  Expect<Alike<typeof result3, Expected3>>
 ]
 
 type Expected1 = {

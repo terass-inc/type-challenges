@@ -22,14 +22,20 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-// type MyAwaited<T extends PromiseLike<any>> = Promise<infer P>
+// 初稿 type MyAwaited<T> = T extends PromiseLike<infer P> ? MyAwaited<P> : T
+// 結果同じに...
+type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P>
+  ? P extends PromiseLike<any>
+    ? MyAwaited<P>
+    : P
+  : T
 
-type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer S>
+/* type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer S>
   ? S extends PromiseLike<any>
     ? MyAwaited<S>
     : S
   : T
-
+ */
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
 
