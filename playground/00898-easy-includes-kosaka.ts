@@ -18,10 +18,52 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Includes<T extends readonly any[], U> = U extends T[number] ? true : false
-type x = Expect<false extends boolean ? true : false>
-type y = Expect<boolean extends false ? true : false>
+// めっちゃ頭いいとおもったけどだめ
+// https://github.com/type-challenges/type-challenges/issues/1568
 
+/* type Includes<T extends readonly any[], U> = {
+  [P in T[number]]: true
+}[U] extends true
+  ? true
+  : false
+
+type Proc1<T extends readonly any[]> = {
+  [P in T[number]]: true
+}
+
+type Proc2<T extends readonly any[], U> = {
+  [P in T[number]]: true
+}[U]
+
+type x = { false: true }
+type y = x[false]
+
+const a = { false: true }
+const b = a[false]
+type test = [
+  Expect<Equal<Proc1<[1, 2]>, { 1: true; 2: true }>>,
+  Expect<Equal<Proc2<[1, 2], 1>, true>>,
+  Expect<Equal<Proc2<[1, 2], 2>, true>>,
+  Expect<Equal<Proc2<[1, 2], 3>, unknown>>,
+  Proc2<[1, false], false>]
+ */
+
+type Includes<T extends readonly unknown[], U> = T extends [
+  infer First,
+  ...infer Rest
+]
+  ? Equal<First, U> extends true
+    ? true
+    : Includes<Rest, U>
+  : false
+
+type test = [
+  Expect<Equal<1 extends 1 ? true : false, true>>,
+  [1, 2, 3, 4][number],
+  Includes<["Kars"], "Kars">,
+  ["Kars", "Esidisi"][number] extends "Kars" ? true : false,
+  Readonly<Includes<["Kars", "Esidisi", "Wamuu", "Santana"], "Kars">>
+]
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
 

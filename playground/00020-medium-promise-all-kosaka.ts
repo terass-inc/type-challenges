@@ -23,10 +23,16 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-declare function PromiseAll(values: any): any
+type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P>
+  ? P extends PromiseLike<any>
+    ? MyAwaited<P>
+    : P
+  : T
+
+declare function PromiseAll<V extends readonly any[]>(values: V): Promise<V>
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 const promiseAllTest1 = PromiseAll([1, 2, 3] as const)
 const promiseAllTest2 = PromiseAll([1, 2, Promise.resolve(3)] as const)
@@ -37,7 +43,7 @@ type cases = [
   Expect<Equal<typeof promiseAllTest1, Promise<[1, 2, 3]>>>,
   Expect<Equal<typeof promiseAllTest2, Promise<[1, 2, number]>>>,
   Expect<Equal<typeof promiseAllTest3, Promise<[number, number, number]>>>,
-  Expect<Equal<typeof promiseAllTest4, Promise<number[]>>>,
+  Expect<Equal<typeof promiseAllTest4, Promise<number[]>>>
 ]
 
 /* _____________ 次のステップ _____________ */
