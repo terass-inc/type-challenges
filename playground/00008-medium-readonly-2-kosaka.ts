@@ -46,6 +46,9 @@ type MyReadonly2<T, K extends keyof T = keyof T> = {
 /* _____________ テストケース _____________ */
 import type { Alike, Debug, Expect } from "@type-challenges/utils"
 
+const x = [1, 2, 3] as const
+const y = [1, 2, 3]
+
 type cases = [
   Todo1 & Readonly<Todo1>,
   Debug<[1, 2, 3]>,

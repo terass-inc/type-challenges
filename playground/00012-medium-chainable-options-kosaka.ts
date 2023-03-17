@@ -39,11 +39,33 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
+// type Chainable<T = {}> = {
+//   option<K extends string, V>(
+//     key: K extends keyof T ? never : K,
+//     value: V
+//   ): Chainable<
+//     K extends keyof T
+//       ? { [k in K]: V } & { [P in keyof T as P extends K ? never : P]: T[P] }
+//       : { [P in keyof T]: T[P] } & { [k in K]: V }
+//   >
+//   get(): T
+// }
+
+/* type Chainable<T = {}, K extends string = string> = {
+  option<Key extends string, Value>(
+    key: K extends Key ? never : Key,
+    value: Value
+  ): Chainable<K extends Key ? Record<Key, Value> : T & Record<Key, Value>, Key>
+  get(): T
+} */
+
 type Chainable<T = {}> = {
   option<K extends string, V>(
-    key: K,
+    key: K extends keyof T ? never : K,
     value: V
-  ): Chainable<{ [P in keyof T]: T[P] } & { K: V }>
+  ): Chainable<{
+    [k in K | keyof T]: k extends K ? V : k extends keyof T ? T[k] : never
+  }>
   get(): T
 }
 
@@ -70,10 +92,18 @@ const result3 = a
   .option("name", 123)
   .get()
 
+const result4 = a
+  .option("foo", "foooo")
+  .option("name", "another name")
+  // @ts-expect-error
+  .option("name", 123)
+  .get()
+
 type cases = [
   Expect<Alike<typeof result1, Expected1>>,
   Expect<Alike<typeof result2, Expected2>>,
-  Expect<Alike<typeof result3, Expected3>>
+  Expect<Alike<typeof result3, Expected3>>,
+  Expect<Alike<typeof result4, Expected4>>
 ]
 
 type Expected1 = {
@@ -89,6 +119,11 @@ type Expected2 = {
 }
 
 type Expected3 = {
+  name: number
+}
+
+type Expected4 = {
+  foo: string
   name: number
 }
 

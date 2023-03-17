@@ -25,7 +25,11 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type MyReturnType<T> = T extends (..._: never[]) => infer P ? P : never
+type MyReturnType<T> = T extends (..._: any[]) => infer P ? P : never
+type A = number | never
+
+// neverについて https://www.typescriptlang.org/docs/handbook/basic-types.html#never
+// neverを使った網羅性チェック https://typescriptbook.jp/reference/statements/never#never%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%9F%E7%B6%B2%E7%BE%85%E6%80%A7%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"

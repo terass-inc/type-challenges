@@ -36,9 +36,19 @@
 
 /* _____________ ここにコードを記入 _____________ */
 // デバッグムズ
-type DeepReadonly<T> = {
-  readonly [P in keyof T]: T[P] extends {} ? DeepReadonly<T[P]> : T[P]
+type DDeepReadonly<T> = {
+  readonly [P in keyof T]: DeepReadonly<T[P]>
 }
+
+const a: {} = () => 1
+const b: Object = 2
+const c = (x: {}) =
+c(1)
+type _DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends Function ? T[K]: _DeepReadonly<T[K]>
+}
+
+type A = Readonly<() => {}>
 
 /* _____________ テストケース _____________ */
 import type {
