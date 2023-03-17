@@ -18,19 +18,23 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type TrimLeft<S extends string> = any
+// type TrimLeft<S extends string> = `${${'\n' | ' '} & string & S}`
+
+type TrimLeft<S extends string> = S extends `${" " | "\n" | "\t"}${infer U}`
+  ? TrimLeft<U>
+  : S
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
-  Expect<Equal<TrimLeft<'str'>, 'str'>>,
-  Expect<Equal<TrimLeft<' str'>, 'str'>>,
-  Expect<Equal<TrimLeft<'     str'>, 'str'>>,
-  Expect<Equal<TrimLeft<'     str     '>, 'str     '>>,
-  Expect<Equal<TrimLeft<'   \n\t foo bar '>, 'foo bar '>>,
-  Expect<Equal<TrimLeft<''>, ''>>,
-  Expect<Equal<TrimLeft<' \n\t'>, ''>>,
+  Expect<Equal<TrimLeft<"str">, "str">>,
+  Expect<Equal<TrimLeft<" str">, "str">>,
+  Expect<Equal<TrimLeft<"     str">, "str">>,
+  Expect<Equal<TrimLeft<"     str     ">, "str     ">>,
+  Expect<Equal<TrimLeft<"   \n\t foo bar ">, "foo bar ">>,
+  Expect<Equal<TrimLeft<"">, "">>,
+  Expect<Equal<TrimLeft<" \n\t">, "">>
 ]
 
 /* _____________ 次のステップ _____________ */
