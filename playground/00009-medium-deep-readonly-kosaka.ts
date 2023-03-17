@@ -35,15 +35,44 @@
 */
 
 /* _____________ ここにコードを記入 _____________ */
+// デバッグムズ
+type DDeepReadonly<T> = {
+  readonly [P in keyof T]: DeepReadonly<T[P]>
+}
 
-type DeepReadonly<T> = any
+const a: {} = () => 1
+const b: Object = 2
+const c = (x: {}) =
+c(1)
+type _DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends Function ? T[K]: _DeepReadonly<T[K]>
+}
+
+type A = Readonly<() => {}>
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type {
+  Debug,
+  Equal,
+  Expect,
+  ExpectExtends,
+  ExpectTrue,
+} from "@type-challenges/utils"
 
 type cases = [
+  ExpectExtends<() => void, {}>,
+  ExpectExtends<{}, () => void>,
+  ExpectTrue<Equal<DeepReadonly<{ a: () => 22 }>, { readonly a: () => 22 }>>,
+  ExpectTrue<Equal<DeepReadonly<{ a: "a" }>, { readonly a: "a" }>>,
+  ExpectTrue<
+    Equal<
+      DeepReadonly<{ a: "a"; b: { c: "c" } }>,
+      { readonly a: "a"; readonly b: { readonly c: "c" } }
+    >
+  >,
+  Debug<DeepReadonly<X1>>,
   Expect<Equal<DeepReadonly<X1>, Expected1>>,
-  Expect<Equal<DeepReadonly<X2>, Expected2>>,
+  Expect<Equal<DeepReadonly<X2>, Expected2>>
 ]
 
 type X1 = {
@@ -55,15 +84,15 @@ type X1 = {
       g: {
         h: {
           i: true
-          j: 'string'
+          j: "string"
         }
-        k: 'hello'
+        k: "hello"
       }
       l: [
-        'hi',
+        "hi",
         {
-          m: ['hey']
-        },
+          m: ["hey"]
+        }
       ]
     }
   }
@@ -80,15 +109,15 @@ type Expected1 = {
       readonly g: {
         readonly h: {
           readonly i: true
-          readonly j: 'string'
+          readonly j: "string"
         }
-        readonly k: 'hello'
+        readonly k: "hello"
       }
       readonly l: readonly [
-        'hi',
+        "hi",
         {
-          readonly m: readonly ['hey']
-        },
+          readonly m: readonly ["hey"]
+        }
       ]
     }
   }

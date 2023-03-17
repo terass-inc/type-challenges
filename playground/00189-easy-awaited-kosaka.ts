@@ -22,10 +22,22 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type MyAwaited<T> = any
+// 初稿 type MyAwaited<T> = T extends PromiseLike<infer P> ? MyAwaited<P> : T
+// 結果同じに...
+type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P>
+  ? P extends PromiseLike<any>
+    ? MyAwaited<P>
+    : P
+  : T
 
+/* type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer S>
+  ? S extends PromiseLike<any>
+    ? MyAwaited<S>
+    : S
+  : T
+ */
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type X = Promise<string>
 type Y = Promise<{ field: number }>
@@ -38,7 +50,7 @@ type cases = [
   Expect<Equal<MyAwaited<Y>, { field: number }>>,
   Expect<Equal<MyAwaited<Z>, string | number>>,
   Expect<Equal<MyAwaited<Z1>, string | boolean>>,
-  Expect<Equal<MyAwaited<T>, number>>,
+  Expect<Equal<MyAwaited<T>, number>>
 ]
 
 // @ts-expect-error
