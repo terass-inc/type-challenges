@@ -48,7 +48,14 @@ type test = [
   Proc2<[1, false], false>]
  */
 
-type Includes<T extends readonly unknown[], U> = T extends [
+// これだとだめ
+type Includes<T extends readonly any[], U> = U extends T[number] ? true : false
+
+type DameIncludes2<T extends readonly any[], U> = U extends T[number]
+  ? true
+  : false
+
+/* type Includes<T extends readonly unknown[], U> = T extends [
   infer First,
   ...infer Rest
 ]
@@ -56,7 +63,7 @@ type Includes<T extends readonly unknown[], U> = T extends [
     ? true
     : Includes<Rest, U>
   : false
-
+ */
 type test = [
   Expect<Equal<1 extends 1 ? true : false, true>>,
   [1, 2, 3, 4][number],

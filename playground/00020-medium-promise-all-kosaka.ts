@@ -23,13 +23,45 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P>
+/* type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P>
   ? P extends PromiseLike<any>
     ? MyAwaited<P>
     : P
   : T
 
-declare function PromiseAll<V extends readonly any[]>(values: V): Promise<V>
+// declare function PromiseAll<V extends readonly any[]>(values: V): Promise<[V extends PromiseLike<any> ? MyAwaited<V>: V]>
+// 時間切れわからんちん
+declare function PromiseAll<V extends readonly any[]>(values: V): Promise<[V extends PromiseLike<any> ? MyAwaited<V> : V]>
+ */
+
+/* declare function PromiseAll<T>(values: T): Promise<AwaitArray<T>>
+// ): Promise<T extends Readonly<infer Arr> ? AwaitArray<Arr> : AwaitArray<T>>
+type AwaitArray<T> = T extends readonly [_: infer Head, ...__: infer Tail]
+  ? [Head extends Promise<infer A> ? A : Head, ...AwaitArray<Tail>]
+  : []
+ */
+// type UnwrapPromise<T> = T extends Promise<infer U> ? U : T
+// declare function PromiseAll<T extends readonly any[]>(values: readonly [...T]): Promise<{ [K in keyof T]: UnwrapPromise<T[K]>}>
+
+/* declare function PromiseAll<T extends any[]>(
+  args: readonly [...T]
+): Promise<{
+  [P in keyof T]: T[P] extends Promise<infer r> ? r : T[P]
+}>
+ */
+const a = [1, 2, Promise.resolve(3)]
+type A = [...typeof a]
+
+// lib.es2015.promise.d.ts
+/**
+ * Creates a Promise that is resolved with an array of results when all of the provided Promises
+ * resolve, or rejected when any Promise is rejected.
+ * @param values An array of Promises.
+ * @returns A new Promise.
+ */
+declare function PromiseAll<T extends readonly unknown[] | []>(
+  values: T
+): Promise<{ -readonly [P in keyof T]: Awaited<T[P]> }>
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
