@@ -24,3 +24,4 @@ type z = Expect<Equal<LiteralUnion extends "a" ? true : false, false>> // "a" | 
 // playground/00898-easy-includes.ts
 
 // #3 は62 ~ 191のmid
+// #4 は296, 527 ~ 949
