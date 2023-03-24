@@ -28,12 +28,25 @@
 /* _____________ ここにコードを記入 _____________ */
 
 type Merge<F, S> = {
-  [K in keyof F | keyof S]: K extends keyof S
+  [K in keyof (F & S)]: K extends keyof S
     ? S[K]
     : K extends keyof F
     ? F[K]
     : never
 }
+
+type _Merge<F, S> = {
+  [K in keyof (F | S)]: K extends keyof S
+    ? S[K]
+    : K extends keyof F
+    ? F[K]
+    : never
+}
+
+type A = Foo | Bar
+type Key = keyof A
+
+type T = _Merge<Foo, Bar>
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect, Debug } from "@type-challenges/utils"

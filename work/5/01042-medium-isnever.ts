@@ -22,20 +22,24 @@
 */
 
 /* _____________ ここにコードを記入 _____________ */
+// https://scrapbox.io/mrsekut-p/T_%E3%81%8Cnever%E3%81%AE%E6%99%82%E3%81%AE%E3%80%81T_extends_.._%E3%81%AF%E3%80%81%E5%95%8F%E7%AD%94%E7%84%A1%E7%94%A8%E3%81%A7never%E3%81%AB%E3%81%AA%E3%82%8B
 
-type IsNever<T> = any
+type IsNever<T> = [T] extends [never] ? true : false
+
+const n: never = 1 as never
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
+  IsNever<never>,
   Expect<Equal<IsNever<never>, true>>,
   Expect<Equal<IsNever<never | string>, false>>,
-  Expect<Equal<IsNever<''>, false>>,
+  Expect<Equal<IsNever<"">, false>>,
   Expect<Equal<IsNever<undefined>, false>>,
   Expect<Equal<IsNever<null>, false>>,
   Expect<Equal<IsNever<[]>, false>>,
-  Expect<Equal<IsNever<{}>, false>>,
+  Expect<Equal<IsNever<{}>, false>>
 ]
 
 /* _____________ 次のステップ _____________ */
