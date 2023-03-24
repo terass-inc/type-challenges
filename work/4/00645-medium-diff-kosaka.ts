@@ -12,10 +12,20 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Diff<O, O1> = any
+/* type Diff<O, O1> = {
+  [K in keyof O | keyof O1]: K extends keyof O
+    ? K extends keyof O1
+      ? never
+      : O[K]
+    : K extends keyof O1
+    ? O1[K]
+    : never
+} */
+
+type Diff<T, U> = Omit<T & U, keyof T & keyof U>
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type Foo = {
   name: string
@@ -30,12 +40,18 @@ type Coo = {
   name: string
   gender: number
 }
+type X = Diff<Foo, Bar>
+
+const x: X = {
+  gender: 1,
+}
 
 type cases = [
+  Diff<Foo, Bar>,
   Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
   Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
   Expect<Equal<Diff<Foo, Coo>, { age: string; gender: number }>>,
-  Expect<Equal<Diff<Coo, Foo>, { age: string; gender: number }>>,
+  Expect<Equal<Diff<Coo, Foo>, { age: string; gender: number }>>
 ]
 
 /* _____________ 次のステップ _____________ */
