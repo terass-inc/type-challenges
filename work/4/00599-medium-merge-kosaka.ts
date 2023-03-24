@@ -27,10 +27,16 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Merge<F, S> = any
+type Merge<F, S> = {
+  [K in keyof F | keyof S]: K extends keyof S
+    ? S[K]
+    : K extends keyof F
+    ? F[K]
+    : never
+}
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect, Debug } from "@type-challenges/utils"
 
 type Foo = {
   a: number
@@ -40,13 +46,26 @@ type Bar = {
   b: number
   c: boolean
 }
+type X = Merge<Foo, Bar>
 
+const x: X = {
+  a: 1,
+  b: 1,
+  c: true,
+}
 type cases = [
-  Expect<Equal<Merge<Foo, Bar>, {
-    a: number
-    b: number
-    c: boolean
-  }>>,
+  Debug<Merge<Foo, Bar>>,
+  keyof Foo | keyof Bar,
+  Expect<
+    Equal<
+      Merge<Foo, Bar>,
+      {
+        a: number
+        b: number
+        c: boolean
+      }
+    >
+  >
 ]
 
 /* _____________ 次のステップ _____________ */
