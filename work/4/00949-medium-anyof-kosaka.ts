@@ -26,7 +26,7 @@ type AnyOf<T extends readonly any[]> = T[number] extends
   | undefined
   | null
   | 0
-  | { [key: string]: never }
+  | { [key: PropertyKey]: never }
   ? false
   : true
 

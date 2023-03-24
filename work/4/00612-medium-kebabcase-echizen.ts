@@ -22,70 +22,78 @@
   > GitHubで確認する：https://tsch.js.org/612/ja
 */
 
-import { Equal } from '@type-challenges/utils'
+import { Equal } from "@type-challenges/utils"
 
 /* _____________ ここにコードを記入 _____________ */
 
 type Capital =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
+  | "A"
+  | "B"
+  | "C"
+  | "D"
+  | "E"
+  | "F"
+  | "G"
+  | "H"
+  | "I"
+  | "J"
+  | "K"
+  | "L"
+  | "M"
+  | "N"
+  | "O"
+  | "P"
+  | "Q"
+  | "R"
+  | "S"
+  | "T"
+  | "U"
+  | "V"
+  | "W"
+  | "X"
+  | "Y"
+  | "Z"
 
 // 初めに大文字が来た場合の処理が出来ない
 type _KebabCase<S extends string> = S extends `${infer First}${infer Rest}`
   ? First extends Capital
     ? `-${Lowercase<First>}${KebabCase<Rest>}`
     : `${First}${KebabCase<Rest>}`
-  : ''
+  : ""
 
 // Restを見る
 type KebabCase<S extends string> = S extends `${infer First}${infer Rest}`
   ? Rest extends Uncapitalize<Rest>
     ? `${Lowercase<First>}${KebabCase<Rest>}`
-    : // oBarBaz -> o-barBaz
+    : // oBarBaz -> o-BarBaz
       `${Lowercase<First>}-${KebabCase<Rest>}`
-  : ''
+  : ""
 
-type T = KebabCase<'FooBarBaz'>
-type T2 = KebabCase<'foo-bar'>
-type T3 = KebabCase<'ABC'>
+type __KebabCase<S extends string, U extends boolean = true> = U extends true
+  ? __KebabCase<Uncapitalize<S>, false>
+  : S extends `${infer F}${infer L}`
+  ? F extends Lowercase<F>
+    ? `${F}${__KebabCase<L, false>}`
+    : `-${Lowercase<F>}${__KebabCase<L, false>}`
+  : S
+
+type T = KebabCase<"FooBarBaz">
+type T2 = KebabCase<"foo-bar">
+type T3 = KebabCase<"ABC">
 
 /* _____________ テストケース _____________ */
-import type { Expect } from '@type-challenges/utils'
+import type { Expect } from "@type-challenges/utils"
 
 type cases = [
-  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
-  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
-  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
-  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
-  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
-  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
-  Expect<Equal<KebabCase<'-'>, '-'>>,
-  Expect<Equal<KebabCase<''>, ''>>,
-  Expect<Equal<KebabCase<'😎'>, '😎'>>,
+  Expect<Equal<KebabCase<"FooBarBaz">, "foo-bar-baz">>,
+  Expect<Equal<KebabCase<"fooBarBaz">, "foo-bar-baz">>,
+  Expect<Equal<KebabCase<"foo-bar">, "foo-bar">>,
+  Expect<Equal<KebabCase<"foo_bar">, "foo_bar">>,
+  Expect<Equal<KebabCase<"Foo-Bar">, "foo--bar">>,
+  Expect<Equal<KebabCase<"ABC">, "a-b-c">>,
+  Expect<Equal<KebabCase<"-">, "-">>,
+  Expect<Equal<KebabCase<"">, "">>,
+  Expect<Equal<KebabCase<"😎">, "😎">>
 ]
 
 /* _____________ 次のステップ _____________ */
