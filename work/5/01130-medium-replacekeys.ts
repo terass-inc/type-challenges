@@ -43,7 +43,17 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type ReplaceKeys<U, T, Y> = any
+type ReplaceKeys<U, T extends PropertyKey, Y> = U extends any
+  ? {
+      [K in keyof U]: T extends keyof Y
+        ? K extends keyof Y
+          ? Y[K]
+          : U[K]
+        : K extends T
+        ? never
+        : U[K]
+    }
+  : never
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -101,8 +111,13 @@ type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
 type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
 
 type cases = [
-  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number; flag: string }>, ReplacedNodes>>,
-  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
+  Expect<
+    Equal<
+      ReplaceKeys<Nodes, 'name' | 'flag', { name: number; flag: string }>,
+      ReplacedNodes
+    >
+  >,
+  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>
 ]
 
 /* _____________ 次のステップ _____________ */
