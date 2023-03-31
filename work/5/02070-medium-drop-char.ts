@@ -18,7 +18,31 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type DropChar<S, C> = any
+// echizen
+type DropChar<
+  S extends string,
+  C extends string
+> = S extends `${infer Start}${infer Rest}`
+  ? Start extends C
+    ? DropChar<Rest, C>
+    : `${Start}${DropChar<Rest, C>}`
+  : ''
+
+// kosaka
+type __DropChar<S, C> = S extends `${infer F}${infer L}`
+  ? F extends C
+    ? DropChar<L, C>
+    : `${F}${DropChar<L, C>}`
+  : S
+
+type ____DropChar<
+  S extends string,
+  C extends string
+> = S extends `${infer H}${C}${infer T}`
+  ? `${H}${DropChar<T, C>}`
+  : S extends C
+  ? ''
+  : S
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -31,7 +55,7 @@ type cases = [
   Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
   Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
   Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>
 ]
 
 /* _____________ 次のステップ _____________ */

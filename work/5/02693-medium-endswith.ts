@@ -20,7 +20,13 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type EndsWith<T extends string, U extends string> = any
+type EndsWith<T extends string, U extends string> = T extends `${string}${U}`
+  ? true
+  : false
+
+type EndsWith<T extends string, U extends string> = T extends `${infer _}${U}`
+  ? true
+  : false
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -31,7 +37,7 @@ type cases = [
   Expect<Equal<EndsWith<'abc', 'd'>, false>>,
   Expect<Equal<EndsWith<'abc', 'ac'>, false>>,
   Expect<Equal<EndsWith<'abc', ''>, true>>,
-  Expect<Equal<EndsWith<'abc', ' '>, false>>,
+  Expect<Equal<EndsWith<'abc', ' '>, false>>
 ]
 
 /* _____________ 次のステップ _____________ */
