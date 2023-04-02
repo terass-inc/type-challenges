@@ -19,22 +19,24 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Reverse<T> = any
+type Reverse<T extends unknown[]> = T extends [...infer H, infer T]
+  ? [T, ...Reverse<H>]
+  : []
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<Reverse<[]>, []>>,
-  Expect<Equal<Reverse<['a', 'b']>, ['b', 'a']>>,
-  Expect<Equal<Reverse<['a', 'b', 'c']>, ['c', 'b', 'a']>>,
+  Expect<Equal<Reverse<["a", "b"]>, ["b", "a"]>>,
+  Expect<Equal<Reverse<["a", "b", "c"]>, ["c", "b", "a"]>>
 ]
 
 type errors = [
   // @ts-expect-error
-  Reverse<'string'>,
+  Reverse<"string">,
   // @ts-expect-error
-  Reverse<{ key: 'value' }>,
+  Reverse<{ key: "value" }>
 ]
 
 /* _____________ 次のステップ _____________ */
