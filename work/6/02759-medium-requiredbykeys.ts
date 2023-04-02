@@ -27,10 +27,13 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type RequiredByKeys<T, K> = any
+type RequiredByKeys<T, K extends keyof T = keyof T> = Required<Pick<T, K>> &
+  Omit<T, K> extends infer O
+  ? { [K in keyof O]: O[K] }
+  : never
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 interface User {
   name?: string
@@ -51,11 +54,11 @@ interface UserRequiredNameAndAge {
 }
 
 type cases = [
-  Expect<Equal<RequiredByKeys<User, 'name'>, UserRequiredName>>,
-  Expect<Equal<RequiredByKeys<User, 'name' | 'age'>, UserRequiredNameAndAge>>,
+  Expect<Equal<RequiredByKeys<User, "name">, UserRequiredName>>,
+  Expect<Equal<RequiredByKeys<User, "name" | "age">, UserRequiredNameAndAge>>,
   Expect<Equal<RequiredByKeys<User>, Required<User>>>,
   // @ts-expect-error
-  Expect<Equal<RequiredByKeys<User, 'name' | 'unknown'>, UserRequiredName>>,
+  Expect<Equal<RequiredByKeys<User, "name" | "unknown">, UserRequiredName>>
 ]
 
 /* _____________ 次のステップ _____________ */
