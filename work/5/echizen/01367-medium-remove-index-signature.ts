@@ -52,8 +52,10 @@ type F = {
   name: string
   age: number
   bar(): void
-  [k: number]: boolean
+  [k: number]: any
 }
+
+type Test = RemoveIndexSignature<F>
 
 type T3 = {
   [P in keyof F]: F[P]

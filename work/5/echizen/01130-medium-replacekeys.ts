@@ -59,10 +59,17 @@ type Bar = {
   hoge: number
 }
 
+// Foo & Barだと、「FooでもありBarでもある」なので両方のプロパティを必ず持ったオブジェクトになる
+// （ただし、hogeは number & string型でnever型となる
 type FooAndBar = Foo & Bar
-type FooOrBar = Foo | Bar
-
+// なので、以下のように全てのプロパティ名のユニオン方になる
+// type KI = "aaa" | "hoge" | "fuga" | "bbb"
 type KI = keyof FooAndBar
+
+// Foo | Barだと、「FooもしくはBarである」なので、共通している 'hoge'しかkeyにならない
+// FooOrBar型のオブジェクトで、アクセスできるプロパティはhogeだけ
+type FooOrBar = Foo | Bar
+// type KU = "hoge"
 type KU = keyof FooOrBar
 
 /* _____________ テストケース _____________ */
