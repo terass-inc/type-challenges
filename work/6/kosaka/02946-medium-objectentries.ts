@@ -29,11 +29,15 @@
   K extends keyof S = keyof S
 > = K extends any ? [K, S[K]] : true */
 
-type ObjectEntries<
-  T,
-  S extends Required<T> = Required<T>,
-  K extends keyof S = keyof S
-> = K extends any ? [K, S[K]] : never
+type IgnoreUndefined<T> = [T] extends [undefined]
+  ? undefined
+  : T extends undefined
+  ? never
+  : T
+
+type ObjectEntries<T, K extends keyof T = keyof T> = K extends any
+  ? [K, IgnoreUndefined<T[K]>]
+  : never
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
@@ -43,9 +47,17 @@ interface Model {
   age: number
   locations: string[] | null
 }
+type _ = { key?: undefined }
+type __ = keyof { key?: undefined }
 
-type _ = keyof { key?: undefined }
-type X = Required<{ key?: undefined }> // never
+type a = IgnoreUndefined<string | undefined>
+type ___<T> = {
+  [P in keyof T]: [T[P]] extends [undefined]
+    ? undefined
+    : Exclude<T[P], undefined>
+}
+type ____ = ___<{ key?: string | undefined }>
+type X = Required<_> // never
 type Y<T = { key?: undefined }> = { [P in keyof T]-?: T[P] } // never
 type z = Y
 
