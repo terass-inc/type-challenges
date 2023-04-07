@@ -33,10 +33,16 @@
 /* _____________ ここにコードを記入 _____________ */
 
 // わからん
-type PercentageParser<A extends string> = A extends `${'+' | '-'}${number}${'%' | ''}` ? true : ''
+type PercentageParser<A extends string> = A extends `${infer F extends
+  | '+'
+  | '-'
+  | ''}${infer M extends string}${infer L extends '%' | ''}`
+  ? [F, M, L]
+  : ''
 type T = PercentageParser<'+100%'>
 type T2 = PercentageParser<'-47%'>
 type T3 = PercentageParser<'+100'>
+type T5 = PercentageParser<'100'>
 type T4 = PercentageParser<'aaa'>
 
 /* _____________ テストケース _____________ */

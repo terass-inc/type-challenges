@@ -20,11 +20,11 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-// type StartsWith<T extends string, U extends string> = T extends `${infer Start}${infer Rest}`
-//   ? Start extends U
-//     ? true
-//     : StartsWith<Start, U>
-//   : false
+type StartsWith<T extends string, U extends string> = T extends `${infer Start}${infer Rest}`
+  ? Start extends U
+    ? true
+    : StartsWith<Start, U>
+  : false
 
 // これでよかった
 type StartsWith<T extends string, U extends string> = T extends `${U}${string}` ? true : false

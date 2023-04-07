@@ -26,6 +26,10 @@ type DropChar<S extends string, C extends string> = S extends `${infer Start}${i
 
 type T = DropChar<'butter fly!', ' '>
 
+const a = ['a', 'b', 'c']
+a.length = 232
+const c = typeof a
+
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
