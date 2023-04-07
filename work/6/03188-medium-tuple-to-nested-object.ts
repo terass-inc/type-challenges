@@ -25,6 +25,29 @@ type TupleToNestedObject<T, U> = T extends [
   ? { [k in K]: TupleToNestedObject<Tail, U> }
   : U
 
+type kosakaTupleToNestedObject<T extends string[], U> = T extends [
+  infer F extends string,
+  ...infer L extends string[]
+]
+  ? { [K in F]: TupleToNestedObject<L, U> }
+  : U
+
+type EchizenTupleToNestedObject<T extends string[], U> = T extends [
+  infer F,
+  ...infer Rest
+]
+  ? {
+      [P in F as P & PropertyKey]: TupleToNestedObject<Rest, U>
+    }
+  : U
+
+type __TupleToNestedObject<T extends PropertyKey[], U> = T extends [
+  infer K extends PropertyKey,
+  ...infer R extends PropertyKey[]
+]
+  ? { [P in K]: TupleToNestedObject<R, U> }
+  : U
+
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
 

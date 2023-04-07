@@ -29,6 +29,14 @@ type Mutable<T extends Record<any, any>> = {
   -readonly [K in keyof T]: T[K]
 }
 
+type KosakaMutable<T extends object> = {
+  -readonly [K in keyof T]: T[K]
+}
+
+type EchizenMutable<T extends Record<PropertyKey, any>> = {
+  -readonly [P in keyof T]: T[P]
+}
+
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
 
