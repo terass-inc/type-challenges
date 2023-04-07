@@ -30,8 +30,53 @@ type PartialByKeys<T, K extends keyof T = keyof T> = Partial<Pick<T, K>> &
   ? { [K in keyof O]: O[K] }
   : never
 
+// ----- kosaka
+type _PartialByKeys<T, K extends keyof T = keyof T> = MergeInsertions<
+  {
+    [k in keyof T as k extends K ? k : never]?: T[k]
+  } & {
+    [k in keyof T as k extends K ? never : k]: T[k]
+  }
+>
+
+type __PartialByKeys<
+  T,
+  K extends keyof T = keyof T,
+  U = {
+    [k in keyof T as k extends K ? k : never]?: T[k]
+  } & {
+    [k in keyof T as k extends K ? never : k]: T[k]
+  }
+> = {
+  [k in keyof U]: U[k]
+}
+
+type ___PartialByKeys<T, K extends keyof T = keyof T> = Partial<Pick<T, K>> &
+  Omit<T, K> extends infer I
+  ? { [k in keyof I]: I[k] }
+  : never
+
+type PartialByKeys<T, K extends keyof T = keyof T> = Omit<
+  Partial<Pick<T, K>> & Omit<T, K>,
+  never
+>
+// ------- end kosaka-----------
+
+// --echizen
+type IntersectionToObj<T> = {
+  [P in keyof T]: T[P]
+}
+
+type ____PartialByKeys<T, K extends keyof T = keyof T> = IntersectionToObj<
+  {
+    [P in K]?: T[P]
+  } & {
+    [P in Exclude<keyof T, K>]: T[P]
+  }
+>
+
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from "@type-challenges/utils"
+import type { Equal, Expect, MergeInsertions } from "@type-challenges/utils"
 
 interface User {
   name: string

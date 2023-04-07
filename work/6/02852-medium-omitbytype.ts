@@ -26,6 +26,13 @@
 type OmitByType<T, U> = {
   [K in keyof T as T[K] extends U ? never : K]: T[K]
 }
+type kosakaOmitByType<T, U> = {
+  [K in keyof T as T[K] extends U ? never : K]: T[K]
+}
+
+type EchizenOmitByType<T, U> = {
+  [P in keyof T as T[P] extends U ? never : P]: T[P]
+}
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"

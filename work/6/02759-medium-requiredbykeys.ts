@@ -32,8 +32,12 @@ type RequiredByKeys<T, K extends keyof T = keyof T> = Required<Pick<T, K>> &
   ? { [K in keyof O]: O[K] }
   : never
 
+type KosakaRequiredByKeys<T, K extends keyof T = keyof T> = Omit<
+  Required<Pick<T, K>> & Omit<T, K>,
+  never
+>
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from "@type-challenges/utils"
+import type { Equal, Expect, Debug } from "@type-challenges/utils"
 
 interface User {
   name?: string

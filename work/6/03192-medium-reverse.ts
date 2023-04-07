@@ -19,9 +19,17 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Reverse<T extends unknown[]> = T extends [...infer H, infer T]
+type _Reverse<T extends unknown[]> = T extends [...infer H, infer T]
   ? [T, ...Reverse<H>]
   : []
+
+type kosakaReverse<T extends unknown[]> = T extends [infer F, ...infer L]
+  ? [...Reverse<L>, F]
+  : T
+
+type Reverse<T extends unknown[]> = T extends [infer A, ...infer B, infer C]
+  ? [C, ...Reverse<B>, A]
+  : T
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"

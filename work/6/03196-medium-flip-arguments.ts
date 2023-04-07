@@ -30,6 +30,19 @@ type FlipArguments<T extends (..._: any[]) => any> = T extends (
   ? (..._: Reverse<A>) => R
   : never
 
+type kosakaReverse<T extends unknown[]> = T extends [infer F, ...infer L]
+  ? [...Reverse<L>, F]
+  : T
+
+type kosakaFlipArguments<T extends (..._: any[]) => any> = T extends (
+  ..._: infer F
+) => infer R
+  ? (..._: kosakaReverse<F>) => R
+  : T
+
+type FlipArguments<T extends (...args: any[]) => any> = (
+  ...args: Reverse<Parameters<T>>
+) => ReturnType<T>
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
 

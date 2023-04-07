@@ -20,6 +20,14 @@
 
 type Shift<T extends any[]> = T extends [any, ...infer Tail] ? Tail : []
 
+type kosakaShift<T extends unknown[]> = T extends []
+  ? []
+  : T extends [unknown, ...infer L]
+  ? [...L]
+  : never
+
+type EchizenShift<T extends any[]> = T extends [any, ...infer Rest] ? Rest : []
+
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
 
