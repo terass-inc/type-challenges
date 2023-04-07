@@ -20,7 +20,27 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type StartsWith<T extends string, U extends string> = any
+type _StartsWith<
+  T extends string,
+  U extends string
+> = T extends `${infer Start}${string}`
+  ? Start extends U
+    ? true
+    : StartsWith<Start, U>
+  : false
+
+type _StartsWith<T extends string, U extends string> = T extends `${U}${string}`
+  ? true
+  : false
+
+type StartsWith<T extends string, U extends string> = T extends `${U}${string}`
+  ? true
+  : false
+
+// kosaka
+type StartsWith<T extends string, U extends string> = T extends `${U}${infer _}`
+  ? true
+  : false
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -32,7 +52,7 @@ type cases = [
   Expect<Equal<StartsWith<'abc', 'abcd'>, false>>,
   Expect<Equal<StartsWith<'abc', ''>, true>>,
   Expect<Equal<StartsWith<'abc', ' '>, false>>,
-  Expect<Equal<StartsWith<'', ''>, true>>,
+  Expect<Equal<StartsWith<'', ''>, true>>
 ]
 
 /* _____________ 次のステップ _____________ */

@@ -25,7 +25,24 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type RemoveIndexSignature<T> = any
+type RemoveIndexSignature<T, P extends PropertyKey = PropertyKey> = {
+  [K in keyof T as P extends K ? never : K]: T[K]
+}
+type __RemoveIndexSignature<T> = {
+  [K in keyof T as string extends K
+    ? never
+    : number extends K
+    ? never
+    : symbol extends K
+    ? never
+    : K]: T[K]
+}
+
+type _RemoveIndexSignature<T> = {
+  [K in keyof T as string | number | symbol extends K ? never : K]: T[K]
+}
+
+type AAA = string | number | symbol extends string ? never : string
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -56,7 +73,7 @@ type cases = [
   Expect<Equal<RemoveIndexSignature<Foo>, { foo(): void }>>,
   Expect<Equal<RemoveIndexSignature<Bar>, { bar(): void; 0: string }>>,
   Expect<Equal<RemoveIndexSignature<FooBar>, { [foobar](): void }>>,
-  Expect<Equal<RemoveIndexSignature<Baz>, { bar(): void; baz: string }>>,
+  Expect<Equal<RemoveIndexSignature<Baz>, { bar(): void; baz: string }>>
 ]
 
 /* _____________ 次のステップ _____________ */

@@ -20,16 +20,43 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type IsUnion<T> = T extends any ? true : false
+type IsUnion<T, _T extends T = T> = true extends (
+  T extends any ? (_T extends T ? false : true) : never
+)
+  ? true
+  : false
+
+/**
+ * 'a' | 'b' extends 'a' | 'b'
+ *
+ * Tが分配されるならunion, されないなら unionでない
+ * 'a' extends 'a' | 'b' -> true
+ * 'a' | 'b' extends 'a' -> false
+ *
+ * [U] extends [T] で 分配前 extends 分配後 をして判定
+ *
+ * ただしこれだとTがneverの場合に
+ * never extends neverでneverになるのでだめ
+ */
+
+// T extends T ? ([U] extends [T] ? false : true) : never
+// 初めにneverかどうかの判定を入れる
+type _IsUnion<T, U = T> = [T] extends [never]
+  ? false
+  : T extends any
+  ? [U] extends [T]
+    ? false
+    : true
+  : never
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from "@type-challenges/utils"
+import type { Equal, Expect } from '@type-challenges/utils'
 
 type cases = [
   Expect<Equal<IsUnion<string>, false>>,
   Expect<Equal<IsUnion<string | number>, true>>,
-  Expect<Equal<IsUnion<"a" | "b" | "c" | "d">, true>>,
-  Expect<Equal<IsUnion<undefined | null | void | "">, true>>,
+  Expect<Equal<IsUnion<'a' | 'b' | 'c' | 'd'>, true>>,
+  Expect<Equal<IsUnion<undefined | null | void | ''>, true>>,
   Expect<Equal<IsUnion<{ a: string } | { a: number }>, true>>,
   Expect<Equal<IsUnion<{ a: string | number }>, false>>,
   Expect<Equal<IsUnion<[string | number]>, false>>,
@@ -37,7 +64,7 @@ type cases = [
   Expect<Equal<IsUnion<string | never>, false>>,
   Expect<Equal<IsUnion<string | unknown>, false>>,
   Expect<Equal<IsUnion<string | any>, false>>,
-  Expect<Equal<IsUnion<string | "a">, false>>,
+  Expect<Equal<IsUnion<string | 'a'>, false>>,
   Expect<Equal<IsUnion<never>, false>>
 ]
 

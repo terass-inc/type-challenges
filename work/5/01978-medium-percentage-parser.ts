@@ -32,7 +32,51 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type PercentageParser<A extends string> = any
+type __PercentageParser<A extends string> = [
+  A extends `${infer S extends '+' | '-'}${string}` ? S : '',
+  A extends `${'+' | '-'}${infer V extends number}%`
+    ? `${V}`
+    : A extends `${'+' | '-'}${infer V extends number}`
+    ? `${V}`
+    : A extends `${infer V extends number}`
+    ? `${V}`
+    : A extends `${infer V extends number}%`
+    ? `${V}`
+    : '',
+  A extends `${string}%` ? '%' : ''
+]
+
+// kosaka
+type _PercentageParser<A extends string> = [
+  A extends `${infer F}${infer _}` ? (F extends '+' | '-' ? F : '') : '',
+  A extends `${infer F}${infer T}`
+    ? F extends '+' | '-' | '%'
+      ? PercentageParser<`${T}`>[1]
+      : `${F}${PercentageParser<T>[1]}`
+    : '',
+  A extends `${infer _}%` ? '%' : ''
+]
+
+// koike (未完)
+type __PercentageParser<A extends string> = A extends `${infer Head extends
+  | '+'
+  | '-'
+  | ''}${infer Tail}`
+  ? [Head, ...(Tail extends `${infer Body}%` ? [Body, '%'] : [Tail, ''])]
+  : never
+
+type AAAA = '100%' extends `${''}${infer A}` ? A : never
+
+type test1<T extends string> = T extends `${infer F}${infer L}` ? [F, L] : never
+type _case = [test1<''>, test1<'a'>]
+
+type PercentageParser<T extends string, S = ''> = T extends `${infer H extends
+  | '+'
+  | '-'}${infer R}`
+  ? PercentageParser<R, H>
+  : T extends `${infer N}%`
+  ? [S, N, '%']
+  : [S, T, '']
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -62,7 +106,7 @@ type cases = [
   Expect<Equal<PercentageParser<'-1'>, Case8>>,
   Expect<Equal<PercentageParser<'%'>, Case9>>,
   Expect<Equal<PercentageParser<'1'>, Case10>>,
-  Expect<Equal<PercentageParser<'100'>, Case11>>,
+  Expect<Equal<PercentageParser<'100'>, Case11>>
 ]
 
 /* _____________ 次のステップ _____________ */
