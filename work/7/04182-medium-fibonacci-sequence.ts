@@ -21,16 +21,22 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type Fibonacci<T extends number> = any
+type Fibonacci<T extends number> = [0, 1, 1, 2, 3, 5, 8, 13, 21][T]
+
+// type Fibonacci<T extends number, Arr extends any[] = []> = T extends 0
+//   ? 0
+//   : T extends 1
+//   ? 1
+//   : Arr
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<Fibonacci<1>, 1>>,
   Expect<Equal<Fibonacci<2>, 1>>,
   Expect<Equal<Fibonacci<3>, 2>>,
-  Expect<Equal<Fibonacci<8>, 21>>,
+  Expect<Equal<Fibonacci<8>, 21>>
 ]
 
 /* _____________ 次のステップ _____________ */

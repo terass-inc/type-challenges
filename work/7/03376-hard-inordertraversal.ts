@@ -37,10 +37,17 @@ interface TreeNode {
   left: TreeNode | null
   right: TreeNode | null
 }
-type InorderTraversal<T extends TreeNode | null> = any
+type InorderTraversal2<T extends TreeNode | null> = T extends TreeNode
+  ? Flatten<
+      [InorderTraversal<T["left"]>, T["val"], InorderTraversal<T["right"]>]
+    >
+  : []
+type InorderTraversal<T extends TreeNode | null> = [T] extends [TreeNode]
+  ? [...InorderTraversal<T["left"]>, T["val"], ...InorderTraversal<T["right"]>]
+  : []
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 const tree1 = {
   val: 1,
@@ -83,11 +90,12 @@ const tree4 = {
 } as const
 
 type cases = [
+  InorderTraversal<typeof tree1>,
   Expect<Equal<InorderTraversal<null>, []>>,
   Expect<Equal<InorderTraversal<typeof tree1>, [1, 3, 2]>>,
   Expect<Equal<InorderTraversal<typeof tree2>, [1]>>,
   Expect<Equal<InorderTraversal<typeof tree3>, [2, 1]>>,
-  Expect<Equal<InorderTraversal<typeof tree4>, [1, 2]>>,
+  Expect<Equal<InorderTraversal<typeof tree4>, [1, 2]>>
 ]
 
 /* _____________ 次のステップ _____________ */
