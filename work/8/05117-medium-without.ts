@@ -17,8 +17,58 @@
 */
 
 /* _____________ ここにコードを記入 _____________ */
+// kkb
+type kkbWithout<
+  T extends number[],
+  U extends number | number[],
+  _U extends number[] = U extends number ? [U] : U,
+> = T extends [infer Head, ...infer Tail extends number[]]
+  ? Head extends _U[number]
+    ? [...kkbWithout<Tail, U, _U>]
+    : [Head, ...kkbWithout<Tail, U, _U>]
+  : []
 
-type Without<T, U> = any
+type kosakaWithout<
+  T extends number[],
+  U extends number[] | number
+> = U extends number[]
+  ? T extends [infer F, ...infer R extends number[]]
+    ? F extends U[number]
+      ? Without<R, U>
+      : [F, ...Without<R, U>]
+    : []
+  : U extends number
+  ? Without<T, [U]>
+  : never
+
+// 型の制約は、U extends any[]するなら要らない
+type echizenWithout<T extends any[], U extends any | any[]> = T extends [infer F, ...infer R]
+  ? F extends (U extends any[] ? U[number] : U)
+    ? echizenWithout<R, U>
+    : [F, ...echizenWithout<R, U>]
+  : []
+
+// >>>>>>>>BEST<<<<<<<<<
+type koikeWithout<T, U> = T extends [infer Head, ...infer Tail]
+  ? Head extends (U extends any[] ? U[number] : U)
+    ? koikeWithout<Tail, U>
+    : [Head, ...koikeWithout<Tail, U>]
+  : []
+
+//wada
+type Without<
+  T,
+  U,
+  V = U extends any[] ? U[number] : U, // UNION!
+> = T extends [infer F, ...infer R]
+  ? F extends V
+    ? Without<R, any, V>
+    : [F, ...Without<R, any, V>]
+  : []
+
+// nakano
+type Value<T extends number | number[]> = T extends number[] ? T[number] : T
+type Without<T extends any[], U extends number | number[]> = T extends [infer A, ...infer B] ? A extends Value<U> ? Without<B, U>  : [A, ...Without<B, U>] :[]
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

@@ -17,8 +17,22 @@
 */
 
 /* _____________ ここにコードを記入 _____________ */
+// kkb
+type Reverse_<S extends string, _S extends string = ''> = S extends `${infer SH}${infer ST}`
+  ? Reverse_<ST, `${SH}${_S}`>
+  : _S
 
-type TrimRight<S extends string> = any
+type TrimTarget = '\n' | '\t' | ' '
+type kkbTrimRight<S extends string, _S extends string = Reverse_<S>> = _S extends `${TrimTarget}${infer Tail}`
+  ? kkbTrimRight<S, `${Tail}`>
+  : Reverse_<_S>
+
+type kosakaTrimRight<S extends string> = S extends `${infer U}${" " | "\n" | "\t"}`
+  ? kosakaTrimRight<U>
+  : S
+  
+type echizenTrimRight<S extends string> = S extends `${infer L}${' ' | '\n' | '\t'}` ? echizenTrimRight<L> : S
+
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

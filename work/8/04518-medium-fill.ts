@@ -18,13 +18,62 @@
 */
 
 /* _____________ ここにコードを記入 _____________ */
+// kkb
+type kkbFill<
+  T extends unknown[],
+  N,
+  Start extends number = 0,
+  End extends number = T['length'],
+  Counter extends unknown[] = [],
+  FillFlag extends boolean = false,
+> = Start extends End
+  ? T
+  : T extends [infer TH, ...infer TT]
+    ? FillFlag extends true
+      ? End extends Counter['length']
+        ? [TH, ...kkbFill<TT, N, Start, End, [unknown, ...Counter], false>]
+        : [N, ...kkbFill<TT, N, Start, End, [unknown, ...Counter], true>]
+      : Start extends Counter['length']
+        ? [N, ...kkbFill<TT, N, Start, End, [unknown, ...Counter], true>]
+        : [TH, ...kkbFill<TT, N, Start, End, [unknown, ...Counter], false>]
+    : []
 
+
+//  wada
 type Fill<
   T extends unknown[],
   N,
   Start extends number = 0,
   End extends number = T['length'],
-> = any
+  V extends any[] = [],
+  IsReplace extends boolean = false,
+> = T extends []
+  ? V
+  : T extends [infer F, ...infer R]
+  ? Start extends End
+    ? [...Fill<R, N, Start, End, [...V, F], false>]
+    : IsReplace extends true
+    ? V['length'] extends End
+      ? [...Fill<R, N, Start, End, [...V, F], false>]
+      : [...Fill<R, N, Start, End, [...V, N], true>]
+    : V['length'] extends Start
+    ? [...Fill<R, N, Start, End, [...V, N], true>]
+    : [...Fill<R, N, Start, End, [...V, F], false>]
+  : V
+  
+// echizen
+// GPT君
+type echizenFill<T extends any[], N, Start extends number = 0, End extends number = T['length']> = T extends [
+  infer F,
+  ...infer R,
+]
+  ? Start extends 0
+    ? End extends 0
+      ? T
+      : [N, ...echizenFill<R, N, 0, End extends 1 ? 0 : End>]
+    : [F, ...echizenFill<R, N, Start extends 1 ? 0 : Start, End extends 1 ? 0 : End>]
+  : []
+
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -41,6 +90,9 @@ type cases = [
   Expect<Equal<Fill<[1, 2, 3], true, 10, 0>, [1, 2, 3]>>,
   Expect<Equal<Fill<[1, 2, 3], true, 10, 20>, [1, 2, 3]>>,
   Expect<Equal<Fill<[1, 2, 3], true, 0, 10>, [true, true, true]>>,
+
+  Expect<Equal<Fill<[1, 2, 3, 4], true, 2, 3>, [1, 2, true, 4]>>,
+  Expect<Equal<echizenFill<[1, 2, 3, 4], true, 2, 3>, [1, 2, true, 4]>>, // これ通る？
 ]
 
 /* _____________ 次のステップ _____________ */

@@ -20,7 +20,43 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type IsTuple<T> = any
+
+type koikeIsTuple<T> = [T] extends [never]
+  ? false
+  : T extends { find: any; length: infer N }
+  ? Equal<N, number> extends false
+    ? true
+    : false
+  : false
+
+
+// Array['length']はnumber, Tuple['length']はnumber literal
+type echizenIsTuple<T> = [T] extends [never]
+  ? false
+  : T extends readonly any[]
+  ? number extends T['length']
+    ? false
+    : true
+  : false
+
+type kosakaIsTuple<T> = [T] extends [never]
+? false
+: T extends any[] | readonly any[] // readonly any[]だけでよい
+? T extends { length: number } // いらん
+  ? number extends T["length"]
+    ? false
+    : true
+  : false
+: false
+
+//nakano
+type IsTuple<T> = [T] extends [never]
+  ? false
+  : T extends readonly any[]
+  ? number extends T['length']
+    ? false
+    : true
+  : false
 
 /* _____________ テストケース _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
