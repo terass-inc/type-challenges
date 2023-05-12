@@ -28,11 +28,17 @@ type Contain<T extends any[], U> = T extends [infer F, ...infer R]
 
 type Unique<T extends any[], V extends any[] = []> = T extends [
   infer F,
-  ...infer R,
+  ...infer R
 ]
   ? Contain<V, F> extends true
     ? Unique<R, V>
     : Unique<R, [...V, F]>
+  : V
+type Unique<T extends any[], V extends any[] = []> = T extends [
+  infer F,
+  ...infer R
+]
+  ? Unique<R, Contain<V, F> extends true ? V : [...V, F]>
   : V
 
 /* _____________ テストケース _____________ */
@@ -53,7 +59,7 @@ type cases = [
       Unique<[unknown, unknown, any, any, never, never]>,
       [unknown, any, never]
     >
-  >,
+  >
 ]
 
 /* _____________ 次のステップ _____________ */

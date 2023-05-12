@@ -43,14 +43,14 @@ type MapTypes<T, R> = R extends { mapFrom: infer MapFrom; mapTo: infer MapTo }
   ? {
       [K in keyof T as T[K] extends MapFrom
         ? K
-        : T[K] extends R["mapFrom"]
+        : T[K] extends R['mapFrom']
         ? never
         : K]: T[K] extends MapFrom ? MapTo : T[K]
     }
   : never
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from "@type-challenges/utils"
+import type { Equal, Expect } from '@type-challenges/utils'
 
 type cases = [
   MapTypes<

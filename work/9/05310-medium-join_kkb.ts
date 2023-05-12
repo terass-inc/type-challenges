@@ -19,10 +19,13 @@
 
 /* _____________ ここにコードを記入 _____________ */
 
-type toString<T> = T extends number
-  ? `${T}`
-  : T
-type Join<T extends any[], U extends string | number, Str extends string = '', _U extends string = toString<U>> = T extends [infer TH, ...infer TT]
+type toString<T> = T extends number ? `${T}` : T
+type Join<
+  T extends any[],
+  U extends string | number,
+  Str extends string = '',
+  _U extends string = toString<U>
+> = T extends [infer TH, ...infer TT]
   ? TH extends string
     ? TT extends []
       ? `${Str}${TH}`
@@ -37,7 +40,7 @@ type cases = [
   Expect<Equal<Join<['a', 'p', 'p', 'l', 'e'], '-'>, 'a-p-p-l-e'>>,
   Expect<Equal<Join<['Hello', 'World'], ' '>, 'Hello World'>>,
   Expect<Equal<Join<['2', '2', '2'], 1>, '21212'>>,
-  Expect<Equal<Join<['o'], 'u'>, 'o'>>,
+  Expect<Equal<Join<['o'], 'u'>, 'o'>>
 ]
 
 /* _____________ 次のステップ _____________ */
