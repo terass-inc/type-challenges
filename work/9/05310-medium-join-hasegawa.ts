@@ -18,12 +18,24 @@
 */
 
 /* _____________ ここにコードを記入 _____________ */
-type Join<T, U extends string | number, JV extends string = ""> = T extends [`${infer Head}`, ...infer Rest] ? (Rest extends [] ? Join<Rest, U, `${JV}${Head}`> : Join<Rest, U, `${JV}${Head}${U}`>) : JV
+type Join<T, U extends string | number, JV extends string = ''> = T extends [
+  `${infer Head}`,
+  ...infer Rest
+]
+  ? Rest extends []
+    ? Join<Rest, U, `${JV}${Head}`>
+    : Join<Rest, U, `${JV}${Head}${U}`>
+  : JV
 
 /* _____________ テストケース _____________ */
-import type { Equal, Expect } from "@type-challenges/utils"
+import type { Equal, Expect } from '@type-challenges/utils'
 
-type cases = [Expect<Equal<Join<["a", "p", "p", "l", "e"], "-">, "a-p-p-l-e">>, Expect<Equal<Join<["Hello", "World"], " ">, "Hello World">>, Expect<Equal<Join<["2", "2", "2"], 1>, "21212">>, Expect<Equal<Join<["o"], "u">, "o">>]
+type cases = [
+  Expect<Equal<Join<['a', 'p', 'p', 'l', 'e'], '-'>, 'a-p-p-l-e'>>,
+  Expect<Equal<Join<['Hello', 'World'], ' '>, 'Hello World'>>,
+  Expect<Equal<Join<['2', '2', '2'], 1>, '21212'>>,
+  Expect<Equal<Join<['o'], 'u'>, 'o'>>
+]
 
 /* _____________ 次のステップ _____________ */
 /*
