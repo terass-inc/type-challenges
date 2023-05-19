@@ -24,7 +24,7 @@
 
 type GetMiddleElement<T extends any[]> = T['length'] extends 0 | 1 | 2
   ? T
-  : T extends [infer F, ...infer M, infer L]
+  : T extends [any, ...infer M, any]
   ? GetMiddleElement<M>
   : never
 

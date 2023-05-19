@@ -12,7 +12,13 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Integer<T extends number> = number extends T ? never : `${T}` extends `${string}.${infer F}` ? never : T
+type Integer<T extends number> = number extends T ? never : `${T}` extends `${number}.${number}` ? never : T
+
+type T = Integer<1.0>
+type U = Integer<1.1>
+
+// これは '1' になるらしい
+type T4 = `${1.0}`
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
