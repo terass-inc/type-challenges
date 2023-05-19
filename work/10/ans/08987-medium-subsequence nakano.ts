@@ -20,10 +20,9 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Subsequence<T extends any[]> = T extends [infer A, ...infer B]
-  ? [A] | [A, ...Subsequence<B>]
-  : []
-type a = Subsequence<[1, 2, 3]>
+type Subsequence<T extends any[], U = T[number]> = U extends infer A
+  ? [A, ...(Subsequence<Exclude<T[number], A>[]> | [])] | []
+  : never
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

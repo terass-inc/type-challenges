@@ -26,13 +26,13 @@ type Join<T extends string[]> = T extends [
     ? A
     : `${A} ${Join<B>}`
   : ''
-type Combination<
+type InternalCombination<
   T extends string[],
   U = T[number]
 > = U extends infer A extends string
-  ? A | Join<[A, Exclude<T[number], A>]> | Combination<Exclude<T[number], A>[]>
+  ? [A, ...(InternalCombination<Exclude<T[number], A>[]> | [])]
   : never
-type a = Combination<['foo', 'bar', 'baz']>
+type Combination<T extends string[]> = Join<InternalCombination<T>>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
