@@ -41,16 +41,25 @@ type Unique<T extends any[], A extends any[] = []> = T extends [
     : Unique<R, [...A, F]>
   : A
 
-type FirstUniqueChar<
+// T extends `${string}${infer unique}${string}` みたいなのがかっこよかったかも？
+/* type FirstUniqueCharIndex<
   T extends string,
-  _T extends string = Unique<ToTuple<T>>[number]
+  _T extends string = Unique<ToTuple<T>>[number],
+  C extends number[] = []
 > = T extends `${infer F}${infer L}`
-  ? F extends Chars
-    ? FirstUniqueChar<L, Chars, A>
-    : FirstUniqueChar<L, Chars | F, [F, ...A]>
-  : A[0]
+  ? F extends _T
+    ? C["length"]
+    : FirstUniqueCharIndex<L, _T, [...C, 1]>
+  : -1 */
 
-type FirstUniqueCharIndex<T extends string> = any
+type FirstUniqueCharIndex<
+  T extends string,
+  C extends number[] = []
+> = T extends `${infer F}${infer L}`
+  ? L extends `${string}${F}${string}`
+    ? FirstUniqueCharIndex<L, [...C, 1]>
+    : C["length"]
+  : -1
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"
@@ -58,8 +67,7 @@ import type { Equal, Expect } from "@type-challenges/utils"
 type cases = [
   Reverse<"abc">,
   ToUnion<"abc">,
-  FirstUniqueChar<Reverse<"abc">>,
-  FirstUniqueChar<Reverse<"aabc">>,
+  FirstUniqueCharIndex<"aabb">,
   Expect<Equal<FirstUniqueCharIndex<"leetcode">, 0>>,
   Expect<Equal<FirstUniqueCharIndex<"loveleetcode">, 2>>,
   Expect<Equal<FirstUniqueCharIndex<"aabb">, -1>>,
