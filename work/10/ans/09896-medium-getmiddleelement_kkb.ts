@@ -25,9 +25,10 @@
 type GetMiddleElement<T extends any[]> = T['length'] extends 0 | 1 | 2
   ? T
   : T extends [infer _, ...infer Mid, infer _]
-    ? GetMiddleElement<Mid>
-    : T
-type hoge = GetMiddleElement<[1,2,3,4,5,6]>
+  ? GetMiddleElement<Mid>
+  : never
+
+type hoge = GetMiddleElement<[1, 2, 3, 4, 5, 6]>
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
@@ -36,8 +37,15 @@ type cases = [
   Expect<Equal<GetMiddleElement<[1, 2, 3, 4, 5]>, [3]>>,
   Expect<Equal<GetMiddleElement<[1, 2, 3, 4, 5, 6]>, [3, 4]>>,
   Expect<Equal<GetMiddleElement<[() => string]>, [() => string]>>,
-  Expect<Equal<GetMiddleElement<[() => number, '3', [3, 4], 5]>, ['3', [3, 4]]>>,
-  Expect<Equal<GetMiddleElement<[() => string, () => number]>, [() => string, () => number]>>,
+  Expect<
+    Equal<GetMiddleElement<[() => number, '3', [3, 4], 5]>, ['3', [3, 4]]>
+  >,
+  Expect<
+    Equal<
+      GetMiddleElement<[() => string, () => number]>,
+      [() => string, () => number]
+    >
+  >,
   Expect<Equal<GetMiddleElement<[never]>, [never]>>,
 ]
 // @ts-expect-error

@@ -19,13 +19,14 @@
 
 /* _____________ Your Code Here _____________ */
 
-type CheckRepeatedChars<T extends string, U extends string[] = []> = T extends `${infer TH}${infer TT}`
+type CheckRepeatedChars<
+  T extends string,
+  U extends string[] = [],
+> = T extends `${infer TH}${infer TT}`
   ? TH extends U[number]
     ? true
     : CheckRepeatedChars<TT, [TH, ...U]>
   : false
-
-
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

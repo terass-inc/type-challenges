@@ -14,7 +14,7 @@
 
 type IsRepeated<
   S extends string,
-  T extends string | number
+  T extends string | number,
 > = S extends `${T}${infer R}`
   ? R extends ''
     ? true
@@ -38,7 +38,7 @@ type cases1 = [
   Expect<Equal<Integer<1.0>, 1>>,
   Expect<Equal<Integer<1.0>, 1>>,
   Expect<Equal<Integer<typeof x>, never>>,
-  Expect<Equal<Integer<typeof y>, 1>>
+  Expect<Equal<Integer<typeof y>, 1>>,
 ]
 
 /* _____________ Further Steps _____________ */

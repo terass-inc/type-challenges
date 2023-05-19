@@ -21,10 +21,11 @@
 /* _____________ Your Code Here _____________ */
 
 type Subsequence<T extends any[], U extends any[] = [], PrevH extends any = never> = T extends [infer TH, ...infer TT]
-  ? Subsequence<TT, [[TH], [...TT], [TH, ...TT], PrevH extends never ? never : [PrevH, TH], PrevH extends never ? never : [PrevH, ...TT], ...U], TH>
+  ? Subsequence<TT, [[TH], TT, [TH, ...TT], PrevH extends never ? never : [PrevH, TH], PrevH extends never ? never : [PrevH, ...TT], ...U], TH>
   : U[number]
 type a = Subsequence<[1,2,3]>
 
+type b = [1,2] extends [infer A, ...infer B, infer C] ? B | never
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

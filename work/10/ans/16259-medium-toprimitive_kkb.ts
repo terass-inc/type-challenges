@@ -44,20 +44,19 @@ type hogehoge = object extends Function ? true : false
 type ToPrimitive_<T extends any> = T extends string
   ? string
   : T extends number
-    ? number
-    : T extends boolean
-      ? boolean
-      : T extends [infer TH, ...infer TT]
-        ? [ToPrimitive_<TH>, ...ToPrimitive_<TT>]
-        : T extends readonly [infer TH, ...infer TT]
-          ? readonly [ToPrimitive_<TH>, ...ToPrimitive_<TT>]
-          : T extends Function
-            ? Function
-            : T extends object
-              ? {[k in keyof T]: ToPrimitive_<T[k]>} 
-              : never
+  ? number
+  : T extends boolean
+  ? boolean
+  : T extends [infer TH, ...infer TT]
+  ? [ToPrimitive_<TH>, ...ToPrimitive_<TT>]
+  : T extends readonly [infer TH, ...infer TT]
+  ? readonly [ToPrimitive_<TH>, ...ToPrimitive_<TT>]
+  : T extends Function
+  ? Function
+  : T extends object
+  ? { [k in keyof T]: ToPrimitive_<T[k]> }
+  : never
 
-    
 type ToPrimitive<T extends any> = {
   [k in keyof T]: ToPrimitive_<T[k]>
 }
@@ -65,7 +64,6 @@ type ToPrimitive<T extends any> = {
 type a = ToPrimitive<PersonInfo>
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
-import { TopicBuilder } from 'firebase-functions/v1/pubsub'
 
 type PersonInfo = {
   name: 'Tom'
@@ -93,9 +91,7 @@ type ExpectedResult = {
   fn: Function
 }
 
-type cases = [
-  Expect<Equal<ToPrimitive<PersonInfo>, ExpectedResult>>,
-]
+type cases = [Expect<Equal<ToPrimitive<PersonInfo>, ExpectedResult>>]
 
 /* _____________ Further Steps _____________ */
 /*

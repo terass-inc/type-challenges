@@ -15,13 +15,13 @@
 type hoge = `${1.0}`
 type hogehoge = typeof x
 type fuga = typeof y
-type fugafuga = Equal<1.00, 1>
+type fugafuga = Equal<1.0, 1>
 
 type Integer<T extends number> = `${T}` extends `${infer _}.${infer _}`
   ? never
   : number extends T
-    ? never
-    : T
+  ? never
+  : T
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -35,7 +35,7 @@ type cases1 = [
   Expect<Equal<Integer<1>, 1>>,
   Expect<Equal<Integer<1.1>, never>>,
   Expect<Equal<Integer<1.0>, 1>>,
-  Expect<Equal<Integer<1.000000000>, 1>>,
+  Expect<Equal<Integer<1.0>, 1>>,
   Expect<Equal<Integer<typeof x>, never>>,
   Expect<Equal<Integer<typeof y>, 1>>,
 ]

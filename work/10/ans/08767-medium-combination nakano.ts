@@ -20,7 +20,7 @@
 
 type Join<T extends string[]> = T extends [
   infer A extends string,
-  ...infer B extends string[]
+  ...infer B extends string[],
 ]
   ? B extends []
     ? A
@@ -28,7 +28,7 @@ type Join<T extends string[]> = T extends [
   : ''
 type InternalCombination<
   T extends string[],
-  U = T[number]
+  U = T[number],
 > = U extends infer A extends string
   ? [A, ...(InternalCombination<Exclude<T[number], A>[]> | [])]
   : never
@@ -57,7 +57,7 @@ type cases = [
       | 'baz bar'
       | 'baz bar foo'
     >
-  >
+  >,
 ]
 
 /* _____________ Further Steps _____________ */

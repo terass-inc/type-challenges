@@ -21,14 +21,13 @@ type CheckRepeatedChars<T extends string> = T extends `${infer F}${infer R}`
 type FirstUniqueCharIndex<
   T extends string,
   Counter extends any[] = [],
-  Prev extends string = '',
 > = T extends `${infer F}${infer R}`
   ? R extends `${string}${F}${string}`
-    ? FirstUniqueCharIndex<R, [...Counter, any], `${Prev}${F}`>
-    : Prev extends `${string}${F}${string}`
-    ? FirstUniqueCharIndex<R, [...Counter, any], `${Prev}${F}`>
+    ? FirstUniqueCharIndex<R, [...Counter, any]>
     : Counter['length']
   : -1
+
+type T = FirstUniqueCharIndex<'aabb'>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
