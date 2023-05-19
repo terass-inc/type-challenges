@@ -37,10 +37,23 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ToPrimitive = any
+type ToPrimitive<T> = {
+  [P in keyof T]: T[P] extends string
+    ? string
+    : T[P] extends number
+    ? number
+    : T[P] extends boolean
+    ? boolean
+    : T[P] extends Function
+    ? Function
+    : ToPrimitive<T[P]>
+}
+
+type T = ToPrimitive<PersonInfo>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+import { Primitive } from 'utility-types'
 
 type PersonInfo = {
   name: 'Tom'
@@ -68,9 +81,7 @@ type ExpectedResult = {
   fn: Function
 }
 
-type cases = [
-  Expect<Equal<ToPrimitive<PersonInfo>, ExpectedResult>>,
-]
+type cases = [Expect<Equal<ToPrimitive<PersonInfo>, ExpectedResult>>]
 
 /* _____________ Further Steps _____________ */
 /*
