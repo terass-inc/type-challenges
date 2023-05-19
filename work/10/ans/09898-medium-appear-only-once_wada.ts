@@ -21,14 +21,11 @@ type GetUnique<T, Char = never, RepeatedChar = never> = T extends [
     : GetUnique<R, Char | F, RepeatedChar>
   : Exclude<Char, RepeatedChar>
 
-type FindEles<
-  T extends any[],
-  U = GetUnique<T>,
-  V extends any[] = [],
-> = T extends [infer F, ...infer R]
-  ? F extends U
-    ? FindEles<R, U, [...V, F]>
-    : FindEles<R, U, V>
+type FindEles<T, U = GetUnique<T>, V extends any[] = []> = T extends [
+  infer F,
+  ...infer R,
+]
+  ? FindEles<R, U, F extends U ? [...V, F] : V>
   : V
 
 /* _____________ Test Cases _____________ */
