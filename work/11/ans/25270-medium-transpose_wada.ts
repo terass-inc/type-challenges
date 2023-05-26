@@ -63,7 +63,7 @@ type GetIndexes<T extends any[]> = {
 type Transpose<
   T extends number[][],
   RowIndexes extends PropertyKey[] = GetIndexes<T>,
-  ColumnIndexes extends PropertyKey[] = GetIndexes<T[0]>,
+  ColumnIndexes extends PropertyKey[] = GetIndexes<T[0]>
 > = {
   [ColumnKey in ColumnIndexes[number]]: {
     [RowKey in RowIndexes[number]]: T[RowKey][ColumnKey]
@@ -109,8 +109,6 @@ const X = {
 const y = {
   0: {
     0: 7,
-    1: 8,
-    2: 9,
   },
   1: {
     0: 8,
@@ -121,9 +119,9 @@ const y = {
 }
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
-import { ExpectFalse, NotEqual } from '@type-challenges/utils'
-import { ChildProcess } from 'child_process'
+import type { Equal, Expect } from "@type-challenges/utils"
+import { ExpectFalse, NotEqual } from "@type-challenges/utils"
+import { ChildProcess } from "child_process"
 
 type cases = [
   Expect<Equal<Transpose<[]>, []>>,
@@ -137,7 +135,7 @@ type cases = [
       Transpose<[[1, 2, 3], [4, 5, 6], [7, 8, 9]]>,
       [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
     >
-  >,
+  >
 ]
 
 /* _____________ Further Steps _____________ */

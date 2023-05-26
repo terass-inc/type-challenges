@@ -26,18 +26,18 @@ type _All<T extends any[], U extends any> = Equal<T[number], U> extends true
   ? true
   : false
 
-type IsUnion<T, U = T> = T extends T
-  ? [U] extends [T]
-    ? false
-    : true
-  : false
+type IsUnion<T, U = T> = T extends T ? ([U] extends [T] ? false : true) : false
 
 type All<T extends any[], U extends any> = T[number] extends U
-  ? (([T[number]] extends [never] ? true : false) | ([U] extends [never] ? true : false)) extends true
+  ?
+      | ([T[number]] extends [never] ? true : false)
+      | ([U] extends [never] ? true : false) extends true
     ? true
-    : IsUnion<T[number] extends true ? true : false> extends IsUnion<U extends true ? true : false>
-      ? true
-      : false
+    : IsUnion<T[number] extends true ? true : false> extends IsUnion<
+        U extends true ? true : false
+      >
+    ? true
+    : false
   : false
 
 type hoge = All<[string], never>
@@ -50,15 +50,15 @@ type b = never extends [never][number] ? true : false
 
 type ho = IsUnion<[never][number] extends true ? true : false>
 type fu = IsUnion<never extends true ? true : false>
-  /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
-import { Type } from 'js-yaml'
+/* _____________ Test Cases _____________ */
+import type { Equal, Expect } from "@type-challenges/utils"
+import { Type } from "js-yaml"
 
 type cases = [
   Expect<Equal<All<[1, 1, 1], 1>, true>>,
   Expect<Equal<All<[1, 1, 2], 1>, false>>,
-  Expect<Equal<All<['1', '1', '1'], '1'>, true>>,
-  Expect<Equal<All<['1', '1', '1'], 1>, false>>,
+  Expect<Equal<All<["1", "1", "1"], "1">, true>>,
+  Expect<Equal<All<["1", "1", "1"], 1>, false>>,
   Expect<Equal<All<[number, number, number], number>, true>>,
   Expect<Equal<All<[number, number, string], number>, false>>,
   Expect<Equal<All<[null, null, null], null>, true>>,
@@ -68,7 +68,7 @@ type cases = [
   Expect<Equal<All<[any], any>, true>>,
   Expect<Equal<All<[unknown], unknown>, true>>,
   Expect<Equal<All<[any], unknown>, false>>,
-  Expect<Equal<All<[unknown], any>, false>>,
+  Expect<Equal<All<[unknown], any>, false>>
 ]
 
 /* _____________ Further Steps _____________ */

@@ -16,7 +16,7 @@ type Fill<
   T,
   Length extends number,
   Result extends T[] = []
-> = Result['length'] extends Length ? Result : Fill<T, Length, [T, ...Result]>
+> = Result["length"] extends Length ? Result : Fill<T, Length, [T, ...Result]>
 type ToPositive<T extends number> = `${T}` extends `-${infer N extends number}`
   ? N
   : T
@@ -26,10 +26,12 @@ type Flatten<T> = T extends [infer A, ...infer B]
 type Square<N extends number, Filled = Fill<any, ToPositive<N>>> = Flatten<{
   // [K in keyof Fill<any, ToPositive<N>>]: ... だとタプルにならない
   [K in keyof Filled]: Filled
-}>['length']
+}>["length"]
+
+type T = Square<-2>
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<Square<0>, 0>>,

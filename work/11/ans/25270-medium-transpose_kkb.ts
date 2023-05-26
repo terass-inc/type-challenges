@@ -22,30 +22,34 @@ type Transpose_<
   T extends any[] = [],
   U extends any[] = [],
   V extends any[] = []
-> = [T, U, V] extends [[infer TH, ...infer TT], [infer UH, ...infer UT], [infer VH, ...infer VT]]
+> = [T, U, V] extends [
+  [infer TH, ...infer TT],
+  [infer UH, ...infer UT],
+  [infer VH, ...infer VT]
+]
   ? [[TH, UH, VH], ...Transpose_<TT, UT, VT>]
   : [T, U] extends [[infer TH, ...infer TT], [infer UH, ...infer UT]]
-    ? [[TH, UH], ...Transpose_<TT, UT>]
-    : T extends [infer TH, ...infer TT]
-      ? [[TH], ...Transpose_<TT>]
-      : []
+  ? [[TH, UH], ...Transpose_<TT, UT>]
+  : T extends [infer TH, ...infer TT]
+  ? [[TH], ...Transpose_<TT>]
+  : []
 
-
-type Transpose<M extends number[][]> = M extends [infer A extends any[], infer B extends any[], infer C extends any[]]
+type Transpose<M extends number[][]> = M extends [
+  infer A extends any[],
+  infer B extends any[],
+  infer C extends any[]
+]
   ? Transpose_<A, B, C>
   : M extends [infer A extends any[], infer B extends any[]]
-    ? Transpose_<A, B>
-    : M extends [infer A extends any[]]
-      ? Transpose_<A>
-      : []
-
-    
-  
+  ? Transpose_<A, B>
+  : M extends [infer A extends any[]]
+  ? Transpose_<A>
+  : []
 
 type hoge = Transpose<[[1, 4], [2, 5], [3, 6]]>
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
-import { ExpectFalse, NotEqual } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
+import { ExpectFalse, NotEqual } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<Transpose<[]>, []>>,
@@ -54,7 +58,12 @@ type cases = [
   Expect<Equal<Transpose<[[1, 2], [3, 4]]>, [[1, 3], [2, 4]]>>,
   Expect<Equal<Transpose<[[1, 2, 3], [4, 5, 6]]>, [[1, 4], [2, 5], [3, 6]]>>,
   Expect<Equal<Transpose<[[1, 4], [2, 5], [3, 6]]>, [[1, 2, 3], [4, 5, 6]]>>,
-  Expect<Equal<Transpose<[[1, 2, 3], [4, 5, 6], [7, 8, 9]]>, [[1, 4, 7], [2, 5, 8], [3, 6, 9]]>>,
+  Expect<
+    Equal<
+      Transpose<[[1, 2, 3], [4, 5, 6], [7, 8, 9]]>,
+      [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+    >
+  >
 ]
 
 /* _____________ Further Steps _____________ */
