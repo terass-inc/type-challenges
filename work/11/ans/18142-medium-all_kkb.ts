@@ -30,22 +30,26 @@ type IsUnion<T, U = T> = T extends T
   ? [U] extends [T]
     ? false
     : true
-  : never
+  : false
+
+type All<T extends any[], U extends any> = T[number] extends U
+  ? (([T[number]] extends [never] ? true : false) | ([U] extends [never] ? true : false)) extends true
+    ? true
+    : IsUnion<T[number] extends true ? true : false> extends IsUnion<U extends true ? true : false>
+      ? true
+      : false
+  : false
+
+type hoge = All<[string], never>
+type hogehoge = [never][number] extends never ? true : false
 
 type f = false extends false ? true : false
 type fuga = IsUnion<never> extends IsUnion<[never][number]> ? true : false
-type a = unknown extends true ? true : false
+type a = string extends never ? true : false
 type b = never extends [never][number] ? true : false
 
-type All<T extends any[], U extends any> = T[number] extends U
-  ? IsUnion<T[number] extends true ? true : false> extends IsUnion<U extends true ? true : false>
-    ? true
-    : false
-  : false
-
-type hoge = All<[never], never>
-type hogehoge = [never][number] extends never ? true : false
-
+type ho = IsUnion<[never][number] extends true ? true : false>
+type fu = IsUnion<never extends true ? true : false>
   /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 import { Type } from 'js-yaml'
