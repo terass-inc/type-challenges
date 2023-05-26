@@ -12,10 +12,28 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Square<N extends number> = number
+type MyAbsolute<T extends number> = `${T}` extends `-${infer U extends number}`
+  ? U
+  : T
+type hoge = MyAbsolute<-3>
+
+type CreateArray<
+  T extends number,
+  element = any,
+  V extends any[] = []
+> = V["length"] extends T ? V : CreateArray<T, [...V, element]>
+
+type Square<
+  T extends number,
+  U extends number = MyAbsolute<T>,
+  Arr extends any[] = CreateArray<U>,
+  Arr2 extends any[] = CreateArray<U, Arr>
+> = Flat<Arr2>["length"]
+
+type hoge = Square<1>
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<Square<0>, 0>>,
@@ -28,7 +46,7 @@ type cases = [
   Expect<Equal<Square<-2>, 4>>,
   Expect<Equal<Square<-5>, 25>>,
   Expect<Equal<Square<-31>, 961>>,
-  Expect<Equal<Square<-50>, 2500>>,
+  Expect<Equal<Square<-50>, 2500>>
 ]
 
 /* _____________ Further Steps _____________ */
